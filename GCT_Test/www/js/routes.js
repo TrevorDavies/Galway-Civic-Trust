@@ -6,7 +6,7 @@ angular.module('app.routes', [])
       .state('tabsController.home', {
     url: '/homePage',
     views: {
-      'tab-home': {
+      'tab1': {
         templateUrl: 'templates/home.html',
         controller: 'homeCtrl'
       }
@@ -16,7 +16,7 @@ angular.module('app.routes', [])
   .state('tabsController.tours', {
     url: '/tourPage',
     views: {
-      'tab-tour': {
+      'tab2': {
         templateUrl: 'templates/tours.html',
         controller: 'toursCtrl'
       }
@@ -26,7 +26,7 @@ angular.module('app.routes', [])
   .state('tabsController.map', {
     url: '/mapPage',
     views: {
-      'tab-map': {
+      'tab3': {
         templateUrl: 'templates/map.html',
         controller: 'mapCtrl'
       }

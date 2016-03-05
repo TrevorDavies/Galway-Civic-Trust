@@ -6,6 +6,9 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.services', 'app.directives'])
+// .config(function($ionicConfigProvider){
+//   $ionicConfigProvider.tabs.position('bottom');
+// })
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
