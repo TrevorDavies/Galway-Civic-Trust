@@ -50,6 +50,21 @@
 .headers h1,h2,h3,h4{
     color:#fff;
 }
+.homeHeader{
+  padding: 40px;
+}
+.temp{
+    color: white;
+    padding: 90px;
+
+}
+.tempText{
+      font-size: 90px;
+}
+.summaryText{
+  padding: 10px;
+  font-size: 30px;
+}
 
 
 /* Tour Tab*/
