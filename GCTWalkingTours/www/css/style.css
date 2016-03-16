@@ -1,0 +1,59 @@
+/* Empty. Add your own CSS if you like */
+
+/* General */
+
+/* Home Tab */
+.scroll{
+  height: 100%;
+}
+.slider.slide{
+  margin-top: 1px;
+}
+.home .slider{
+  height: 100%;
+}
+.intro-slide {
+  background:
+  /* top, transparent red, faked with gradient */
+  linear-gradient(
+  rgba(0, 0, 0, 0.4),
+  rgba(0, 0, 0, 0.4)
+  ),
+  /* bottom, image */
+  url("../img/galway2.jpg") top center fixed repeat;
+  background-size: auto 100%;
+  padding-top: 44px;
+  color: #000;
+  text-align: center;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+}
+@media screen and (min-width: 500px) {
+	.intro-slide {
+	  background:
+	  /* top, transparent red, faked with gradient */
+	  linear-gradient(
+	  rgba(0, 0, 0, 0.4),
+	  rgba(0, 0, 0, 0.4)
+	  ),
+	  /* bottom, image */
+	  url("../img/galway.jpg") top center fixed repeat;
+	  background-size: cover;
+	  }
+}
+
+#logo img {
+
+  width: 400px;
+
+}
+.headers h1,h2,h3,h4{
+    color:#fff;
+}
+
+
+/* Tour Tab*/
+
+/* Map Tab*/
+
+/* Settings Tab*/
