@@ -3,7 +3,23 @@
     <ion-nav-back-button>
     </ion-nav-back-button>
   </ion-nav-bar>
-  <ion-content>
+  <ion-content class="has-header">
+    <ion-list>
+        <ion-item  ng-repeat="t in tourData">
+            <h1>{{t.title}}</h1>
+            <img ng-src="http://gct.es.vc:9000{{t.image}}">
+            <p>{{t.description}}</p>
+            <ion-list>
+              <ion-item>
+                I love kittens!
+                <ion-option-button class="button-positive">Share</ion-option-button>
+                <ion-option-button class="button-assertive">Edit</ion-option-button>
+              </ion-item>
+            </ion-list>
+        </ion-item>
+    </ion-list>
+</ion-content>
+  <!-- <ion-content>
     <!-- <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
         <img ng-src="{{chat.face}}">
@@ -16,5 +32,5 @@
         </ion-option-button>
       </ion-item>
     </ion-list> -->
-  </ion-content>
+  </ion-content> -->
 </ion-view>

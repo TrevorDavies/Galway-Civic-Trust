@@ -17,6 +17,20 @@ angular.module('GCTWT.controllers', ['ionic'])
 
 })//end HomeCtrl
 
-.controller('ToursCtrl', function($scope) {})//end TourCtrl
+.controller('ToursCtrl', function($scope,$state,$http) {
+  $scope.tourData = []
+
+  $http.get('http://gct.es.vc:9000/api/tour/getAllTours').then(function(resp){
+    for(var i=0;i<resp.data.length;i++){
+      var tour = {
+        "description": resp.data[i].description,
+        "title": resp.data[i].title,
+        "image": resp.data[i].image
+      };
+        $scope.tourData.push(tour);
+    }
+        console.log($scope.tourData);
+  });
+})//end TourCtrl
 .controller('MapCtrl', function($scope) {})//end MapCtrl
 .controller('SettingsCtrl', function($scope) {})//end SettingsCtrl
