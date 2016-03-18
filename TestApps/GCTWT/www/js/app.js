@@ -1,5 +1,5 @@
 
-angular.module('GCTWT', ['ionic', 'GCTWT.controllers', 'GCTWT.services'])
+angular.module('GCTWT', ['ionic','ngCordova','GCTWT.controllers', 'GCTWT.services'])
 //this forces the tabs to bottom of the page for android, ios default bottom
 .config(function($ionicConfigProvider){
   $ionicConfigProvider.tabs.position('bottom');

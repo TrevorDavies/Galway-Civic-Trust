@@ -19,7 +19,7 @@ angular.module('GCTWT.controllers', ['ionic'])
 
 .controller('ToursCtrl', function($scope,$state,$http) {
   $scope.tourData = []
-
+// http://gct.es.vc:9000/api/tour/getAllPublishedTours
   $http.get('http://gct.es.vc:9000/api/tour/getAllTours').then(function(resp){
     for(var i=0;i<resp.data.length;i++){
       var tour = {
@@ -32,5 +32,23 @@ angular.module('GCTWT.controllers', ['ionic'])
         console.log($scope.tourData);
   });
 })//end TourCtrl
-.controller('MapCtrl', function($scope) {})//end MapCtrl
+.controller('MapCtrl', function($scope,$state,$cordovaGeolocation) {
+  var options = {timeout: 10000, enableHighAccuracy: true};
+
+  $cordovaGeolocation.getCurrentPosition(options).then(function(position){
+
+    var latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+
+    var mapOptions = {
+      center: latLng,
+      zoom: 15,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+  }, function(error){
+    console.log("Could not get location");
+  });
+})//end MapCtrl
 .controller('SettingsCtrl', function($scope) {})//end SettingsCtrl
