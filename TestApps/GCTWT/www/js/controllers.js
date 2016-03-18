@@ -46,6 +46,15 @@ angular.module('GCTWT.controllers', ['ionic'])
     };
 
     $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    google.maps.event.addListenerOnce($scope.map, 'idle', function(){
+
+  var marker = new google.maps.Marker({
+      map: $scope.map,
+      animation: google.maps.Animation.DROP,
+      position: latLng
+  });
+
+});
 
   }, function(error){
     console.log("Could not get location");
