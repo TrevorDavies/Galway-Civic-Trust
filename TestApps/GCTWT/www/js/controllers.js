@@ -23,6 +23,7 @@ angular.module('GCTWT.controllers', ['ionic'])
   $http.get('http://gct.es.vc:9000/api/tour/getAllTours').then(function(resp){
     for(var i=0;i<resp.data.length;i++){
       var tour = {
+        "tourID": resp.data[i]._id,
         "description": resp.data[i].description,
         "title": resp.data[i].title,
         "image": resp.data[i].image
