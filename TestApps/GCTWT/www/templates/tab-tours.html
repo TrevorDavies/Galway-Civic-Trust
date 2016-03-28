@@ -5,30 +5,13 @@
   </ion-nav-bar>
   <ion-content class="has-header">
     <ion-list>
-        <ion-item  ng-repeat="t in tourData">
-            <h1>{{t.title}}</h1>
-            <img ng-src="http://gct.es.vc:9000{{t.image}}">
-            <p>{{t.description}}</p>
-            <br></br>
-            <div class="bar bar-footer bar-stable">
-              <button class="button button-small">Start</button>
-              <button class="button button-small">About</button>
-
-            </div>
+        <ion-item ng-repeat='item in places'>
+        <a href="#/tours/{{item._id}}"><img ng-src="http://gct.es.vc:9000{{item.image}}"></a>
+        <h3>{{ item.title }}</h3>
+        <h2>{{ item.description }}</h2>
+        <br></br>
+            
     </ion-list>
 </ion-content>
-  <!-- <ion-content>
-    <!-- <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
-        <img ng-src="{{chat.face}}">
-        <h2>{{chat.name}}</h2>
-        <p>{{chat.lastText}}</p>
-        <i class="icon ion-chevron-right icon-accessory"></i>
-
-        <ion-option-button class="button-assertive" ng-click="remove(chat)">
-          Delete
-        </ion-option-button>
-      </ion-item>
-    </ion-list> -->
-  </ion-content> -->
+ 
 </ion-view>

@@ -17,22 +17,7 @@ angular.module('GCTWT.controllers', ['ionic'])
 
 })//end HomeCtrl
 
-.controller('ToursCtrl', function($scope,$state,$http) {
-  $scope.tourData = []
-// http://gct.es.vc:9000/api/tour/getAllPublishedTours
-  $http.get('http://gct.es.vc:9000/api/tour/getAllTours').then(function(resp){
-    for(var i=0;i<resp.data.length;i++){
-      var tour = {
-        "tourID": resp.data[i]._id,
-        "description": resp.data[i].description,
-        "title": resp.data[i].title,
-        "image": resp.data[i].image
-      };
-        $scope.tourData.push(tour);
-    }
-        console.log($scope.tourData);
-  });
-})//end TourCtrl
+
 .controller('MapCtrl', function($scope,$state,$cordovaGeolocation) {
   var options = {timeout: 10000, enableHighAccuracy: true};
 
@@ -61,4 +46,40 @@ angular.module('GCTWT.controllers', ['ionic'])
     console.log("Could not get location");
   });
 })//end MapCtrl
-.controller('SettingsCtrl', function($scope) {})//end SettingsCtrl
+
+//=============================================
+
+.controller('LocationsCtrl',['$scope', '$http', '$state', function($scope, $http, $state) {
+ $scope.tourId=$state.params.aId;
+   
+ $scope.url = 'http://gct.es.vc:9000/api/tour/'+$scope.tourId +'/1';
+  //  console.log($scope.url);
+   // console.log($scope.tourId);
+    $scope.locationData = [];
+    $http.get($scope.url).then(function(resp){
+    
+    $scope.locationData = resp.data;
+        //console.log($scope.tourData);
+    });//end of http
+    
+    
+   
+}])//end LocationsCtrl
+
+//===========================================
+
+.controller('ToursCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
+        
+    $http.get('http://gct.es.vc:9000/api/tour/getAllPublishedTours').success(function(data) {
+      $scope.places = data;
+      
+      
+      $scope.whichplace=$state.params.aId;
+      
+
+
+    });
+}]);
+
+
+

@@ -1,0 +1,16 @@
+<ion-view view-title="Tours">
+    This is Locations Page
+  <ion-nav-bar class="bar-stable">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+  </ion-nav-bar>
+  <ion-content class="has-header">
+    <ion-list>
+  <ion-item ng-repeat="location in locationData">
+     
+    {{location.title}}
+  </ion-item>
+</ion-list>
+</ion-content>
+ 
+</ion-view>

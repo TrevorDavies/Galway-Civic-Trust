@@ -25,13 +25,10 @@ angular.module('GCTWT', ['ionic','ngCordova','GCTWT.controllers', 'GCTWT.service
 .config(function($stateProvider, $urlRouterProvider) {
 $stateProvider
 // setup an abstract state for the tabs directive
-    .state('tab', {
-      url: "/tab",
-      abstract: true,
-      templateUrl: "templates/tabs.html"
-    })
+    
+    
     // Each tab has its own nav history stack:
-    .state('tab.home', {
+    .state('home', {
       url: '/home',
       views: {
         'tab-home': {
@@ -40,7 +37,7 @@ $stateProvider
         }
       }
     })
-	.state('tab.maps', {
+	.state('maps', {
       url: '/maps',
       views: {
         'tab-maps': {
@@ -49,26 +46,38 @@ $stateProvider
         }
       }
     })
-    .state('tab.tours', {
+    .state('tours', {
       url: '/tours',
       views: {
         'tab-tours': {
           templateUrl: 'templates/tab-tours.html',
           controller: 'ToursCtrl'
+
         }
       }
     })
+    .state('locations', {
+      url: '/tours/:aId',
+      views: {
+        'tab-tours': {
+          templateUrl: 'templates/locations.html',
+          controller: 'LocationsCtrl'
 
-	.state('tab.settings', {
-      url: '/settings',
+        }
+      }   
+      
+    })
+
+	.state('details', {
+      url: '/locations',
       views: {
         'tab-settings': {
-          templateUrl: 'templates/tab-settings.html',
-          controller: 'SettingsCtrl'
+          templateUrl: 'templates/details.html'
+          //controller: 'DetailsCtrl'
         }
       }
     });
 
 // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/home');
+  $urlRouterProvider.otherwise('/home');
 });
