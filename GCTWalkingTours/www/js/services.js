@@ -1,1 +1,3 @@
-angular.module('starter.services', [])
+
+
+angular.module('GCTWT.services', ['ngResource'])
