@@ -162,8 +162,9 @@ angular.module('GCTWT.controllers', ['ionic', 'ngStorage'])
 
 .controller('LocationsCtrl',['$scope', '$http', '$state', function($scope, $http, $state) {
  $scope.tourId=$state.params.aId;
+ console.log($scope.tourId);
 
- $scope.url = 'http://galwaytour.tk/api/tour/'+$scope.tourId +'/1';
+ $scope.url = 'http://galwaytour.tk/api/tour/pullAllLocations/'+$scope.tourId;
 
     $scope.locationData = [];
     $http.get($scope.url).then(function(resp){
@@ -172,7 +173,6 @@ angular.module('GCTWT.controllers', ['ionic', 'ngStorage'])
   //  console.log($scope.tourId);
   //  console.log($scope.locationData);
   //  console.log($scope.url);
-
     });//end of http
 
 }])//end LocationsCtrl
@@ -181,7 +181,7 @@ angular.module('GCTWT.controllers', ['ionic', 'ngStorage'])
 .controller('DetailsCtrl',['$scope', '$http', '$state', function($scope, $http, $state) {
  $scope.tourId=$state.params.aId;
 
- $scope.url = 'http://galwaytour.tk/api/tour/'+ $scope.tourId ;
+ $scope.url = 'http://galwaytour.tk/api/tour/'+ $scope.tourId;
 
     $scope.location = [];
     $http.get($scope.url).then(function(resp){
