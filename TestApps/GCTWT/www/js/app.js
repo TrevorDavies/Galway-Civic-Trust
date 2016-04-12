@@ -25,59 +25,56 @@ angular.module('GCTWT', ['ionic','ngCordova','GCTWT.controllers', 'GCTWT.service
 .config(function($stateProvider, $urlRouterProvider) {
 $stateProvider
 // setup an abstract state for the tabs directive
-    
-    
-    // Each tab has its own nav history stack:
-    .state('home', {
-      url: '/home',
-      views: {
-        'tab-home': {
-          templateUrl: 'templates/tab-home.html',
-          controller: 'HomeCtrl'
-        }
-      }
-    })
-	.state('maps', {
-      url: '/maps',
-      views: {
-        'tab-maps': {
-          templateUrl: 'templates/tab-maps.html',
-          controller: 'MapCtrl'
-        }
-      }
-    })
-    .state('tours', {
-      url: '/tours',
-      views: {
-        'tab-tours': {
-          templateUrl: 'templates/tab-tours.html',
-          controller: 'ToursCtrl'
+.state('home', {
+  url: '/home',
+  views: {
+    'tab-home': {
+      templateUrl: 'templates/tab-home.html',
+      controller: 'HomeCtrl'
+    }
+  }
+})
+.state('maps', {
+  url: '/maps',
+  views: {
+    'tab-maps': {
+      templateUrl: 'templates/tab-maps.html',
+      controller: 'MapCtrl'
+    }
+  }
+})
+.state('tours', {
+  url: '/tours',
+  views: {
+    'tab-tours': {
+      templateUrl: 'templates/tab-tours.html',
+      controller: 'ToursCtrl'
 
-        }
-      }
-    })
-    .state('locations', {
-      url: '/tours/:aId',
-      views: {
-        'tab-tours': {
-          templateUrl: 'templates/locations.html',
-          controller: 'LocationsCtrl'
+    }
+  }
+})
+.state('locations', {
+  url: '/tours/:aId',
+  views: {
+    'tab-tours': {
+      templateUrl: 'templates/locations.html',
+      controller: 'LocationsCtrl'
 
-        }
-      }   
-      
-    })
+    }
+  }
 
-	.state('details', {
-      url: '/locations',
-      views: {
-        'tab-settings': {
-          templateUrl: 'templates/details.html'
-          //controller: 'DetailsCtrl'
-        }
-      }
-    });
+})
+
+.state('details', {
+  url: '/details/:aId',
+  views: {
+    'tab-tours': {
+      templateUrl: 'templates/details.html',
+      controller: 'DetailsCtrl'
+    }
+  }
+});
 
 // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/home');
+$urlRouterProvider.otherwise('/home');
 });
