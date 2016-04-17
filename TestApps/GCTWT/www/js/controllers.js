@@ -160,6 +160,7 @@ angular.module('GCTWT.controllers', ['ionic', 'ngStorage'])
   });
 })//end MapCtrl
 
+
 .controller('LocationsCtrl',['$scope', '$http', '$state', function($scope, $http, $state) {
  $scope.tourId=$state.params.aId;
  console.log($scope.tourId);
