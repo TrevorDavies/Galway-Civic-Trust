@@ -1,4 +1,6 @@
-angular.module('GCTWT.controllers', ['ionic', 'ngStorage'])
+
+angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
+
 
 .constant('WEATHERAPI_KEY','f40acdcb5aabf0faf07699d42ffc88c2' )
 .controller('HomeCtrl', function($scope,$state,$http,WEATHERAPI_KEY) {
@@ -161,7 +163,9 @@ angular.module('GCTWT.controllers', ['ionic', 'ngStorage'])
 })//end MapCtrl
 
 
-.controller('LocationsCtrl',['$scope', '$http', '$state', function($scope, $http, $state) {
+
+.controller('LocationsCtrl',['$scope', '$http', '$state', '$localStorage', '$cordovaFile','$cordovaFileTransfer', function($scope, $http, $state, $localStorage, $cordovaFile, $cordovaFileTransfer) {
+
  $scope.tourId=$state.params.aId;
  console.log($scope.tourId);
 
@@ -176,7 +180,135 @@ angular.module('GCTWT.controllers', ['ionic', 'ngStorage'])
   //  console.log($scope.url);
     });//end of http
 
+    //we already have the data so save it to local storage for offline use when requested
+    $scope.downloadTour = function(tourData) {
+
+      var mapURL = 'https://maps.googleapis.com/maps/api/staticmap?key=AIzaSyCBYil1DfXoRTgEcqB0-wL99XVTKqEkVio&size=300x300&format=JPEG&maptype=roadmap&path=color:0x0000ff80|weight:1';
+      var markers = '&markers=';
+
+      //Error handling, making sure dir is there before removing it, if its there create it
+      $cordovaFile.checkDir(cordova.file.externalRootDirectory, 'tourResources').then(function (success) {
+          $cordovaFile.removeRecursively(cordova.file.externalRootDirectory, 'tourResources').then(function (success) {
+            console.log('Folder removed, creating new one');
+            for(var i = 0; i < tourData.length; i++) {
+
+              mapURL += '|' + tourData[i].xCoordinate + ',' + tourData[i].yCoordinate;
+              markers += i == 0 ? 'color:green|label:S|' + tourData[i].xCoordinate + ',' + tourData[i].yCoordinate : '&markers=size:mid|color:red|label:'+(i+1)+'|' + tourData[i].xCoordinate + ',' + tourData[i].yCoordinate;
+
+              var localimage = $scope.FileDownload(tourData[i].image);
+              tourData[i]['localimage'] = localimage;
+            }
+
+            mapURL += markers;
+            console.log(mapURL);
+            $localStorage.staticMapPath = $scope.MapDownload(mapURL);
+            $localStorage.mySavedTour = tourData;
+
+          }, function (error) {
+            console.log(error);
+          });
+      }, function (error) {
+        console.log('directory folder not there')
+        for(var i = 0; i < tourData.length; i++) {
+
+          mapURL += '|' + tourData[i].xCoordinate + ',' + tourData[i].yCoordinate;
+          markers += i == 0 ? 'color:green|label:S|' + tourData[i].xCoordinate + ',' + tourData[i].yCoordinate : '&markers=size:mid|color:red|label:'+(i+1)+'|' + tourData[i].xCoordinate + ',' + tourData[i].yCoordinate;
+
+          var localimage = $scope.FileDownload(tourData[i].image);
+          tourData[i]['localimage'] = localimage;
+        }
+
+        mapURL += markers;
+        console.log(mapURL);
+        $localStorage.staticMapPath = $scope.MapDownload(mapURL);
+        $localStorage.mySavedTour = tourData;
+      });
+    }
+
+    $scope.MapDownload = function (url) {
+
+      var filename = 'staticMap.jpg';
+      var targetPath = cordova.file.externalRootDirectory + 'tourResources/' + filename;
+
+      $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
+          console.log('Success Download Map');
+      }, function (error) {
+          console.log('Error');
+      }, function (progress) {
+          // PROGRESS HANDLING GOES HERE
+      });
+      return targetPath;
+    }
+
+    $scope.FileDownload = function (imageUrl) {
+      var url = "http://galwaytour.tk/" + imageUrl;
+      var filename = url.split("/").pop();
+      var targetPath = cordova.file.externalRootDirectory + 'tourResources/' + filename;
+
+      $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
+          console.log('Success Download Images');
+      }, function (error) {
+          console.log('Error');
+      }, function (progress) {
+          // PROGRESS HANDLING GOES HERE
+      });
+      return targetPath;
+    }
 }])//end LocationsCtrl
+
+.controller('SavedTourCtrl',['$scope', '$localStorage', '$state', function($scope, $localStorage, $state) {
+  $scope.$on('$ionicView.enter', function() {
+     // Code you want executed every time view is opened
+     if($localStorage.mySavedTour != "") {
+         $scope.savedTourData = $localStorage.mySavedTour;
+         $scope.staticMapPath = $localStorage.staticMapPath;
+        //  if(!$localStorage.tourMap) {
+        //    console.log('im here');
+        //    var latLng = new google.maps.LatLng($scope.savedTourData[0].xCoordinate,$scope.savedTourData[0].yCoordinate);
+         //
+        //    var mapOptions = {
+        //      disableDefaultUI: true,
+        //      draggable: false,
+        //      center: latLng,
+        //      zoom: 15,
+        //      mapTypeId: google.maps.MapTypeId.ROADMAP
+        //    };
+         //
+        //    var tourCoordinates = [];
+         //
+        //    for(var i = 0; i < $scope.savedTourData.length; i++) {
+        //      tourCoordinates.push(new google.maps.LatLng($scope.savedTourData[i].xCoordinate,$scope.savedTourData[i].yCoordinate));
+        //    }
+         //
+        //    console.log(tourCoordinates);
+         //
+        //    $localStorage.tourMap = [];
+        //    $scope.map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        //    console.log('map initialized');
+        //    $localStorage.tourMap = $scope.map;
+        //    console.log('map local done' + $scope.map);
+        //    console.log($localStorage.tourMap);
+         //
+        //    google.maps.event.addListenerOnce($localStorage.tourMap, 'idle', function(){
+        //      console.log('before path')
+        //      var tourPath = new google.maps.Polyline({
+        //         path: tourCoordinates,
+        //         geodesic: true,
+        //         strokeColor: '#FF0000',
+        //         strokeOpacity: 1.0,
+        //         strokeWeight: 2
+        //       });
+        //       console.log('after path')
+        //       tourPath.setMap($localStorage.tourMap);
+        //       console.log('after tour')
+        //    });
+        // }
+     } else {
+         $scope.savedTourData = {'title':'No tours saved localy'}
+     }
+  })
+
+}])
 
 //===========================================
 .controller('DetailsCtrl',['$scope', '$http', '$state', function($scope, $http, $state) {

@@ -1,0 +1,30 @@
+<ion-view view-title="Mytour">
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+    </ion-nav-bar>
+  </ion-nav-bar>
+  <ion-content class="has-header">
+  <ion-list>
+
+   <ion-item ng-class="{'star': location.star}" ng-repeat="location in savedTourData" class="item-thumbnail-left item-icon-right
+      item-text-wrap">
+      <img ng-src={{location.localimage}} alt="Photo">
+      <h3>{{$index+1}} . {{location.title}}</h3>
+      <p>{{ location.description}} </p>
+
+	 <button class="button button-clear icon ion-star button button-assertive"
+        ng-click="toggleStar(location)"
+        ng-show="location.star"></button>
+
+      <ion-option-button class="button-dark"
+        ng-click="toggleStar(location)">
+        <i class="icon ion-star"></i>
+      </ion-option-button>
+
+   </ion-item>
+</ion-list>
+<img id="tourStaticMap" ng-src={{staticMapPath}} alt="Tour Map">
+</ion-content>
+
+</ion-view>

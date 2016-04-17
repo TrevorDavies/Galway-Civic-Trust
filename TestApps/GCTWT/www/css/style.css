@@ -45,6 +45,8 @@
 #logo img {
 
   width: 400px;
+  margin-left: -20px;
+
 
 }
 .headers h1,h2,h3,h4{
@@ -124,11 +126,13 @@
 	  }
 }
 
+
 #logo img {
 
   width: 400px;
 
 }
+
 .headers h1,h2,h3,h4{
     color:#fff;
 }
@@ -254,5 +258,12 @@ height: 100%;
   font-weight: 200;
 }
 
+
+
+/* Offline Saved Tour Tab*/
+#tourStaticMap {
+  width: 100%;
+  height: auto;
+}
 
 /* Settings Tab*/
