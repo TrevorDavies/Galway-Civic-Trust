@@ -6,11 +6,7 @@
   </ion-nav-bar>
   <ion-content class="has-header">
   <ion-list>
-<<<<<<< HEAD
-	
-=======
 
->>>>>>> 3c96d1a6e2d702d5eb031c07172bd9a789fdfb6b
    <ion-item ng-class="{'star': location.star}" ng-repeat="location in locationData" class="item-thumbnail-left item-icon-right
       item-text-wrap" href="#/details/{{location._id}}">
       <img ng-src="http://galwaytour.tk/{{location.image}}" alt="Photo">
@@ -18,33 +14,17 @@
       <p>{{ location.description.substr(0,100) }} </p>
 	  <p style="color:blue" align="right"> Read more... </p>
 	 <i class="icon ion-arrow-right-b"></i>
-<<<<<<< HEAD
-	 
-	 <button class="button button-clear icon ion-star button button-assertive"
-        ng-click="toggleStar(location)"
-        ng-show="location.star"></button>
-		
-=======
+
 
 	 <button class="button button-clear icon ion-star button button-assertive"
         ng-click="toggleStar(location)"
         ng-show="location.star"></button>
 
->>>>>>> 3c96d1a6e2d702d5eb031c07172bd9a789fdfb6b
       <ion-option-button class="button-dark"
         ng-click="toggleStar(location)">
         <i class="icon ion-star"></i>
       </ion-option-button>
-<<<<<<< HEAD
-	  
-   </ion-item>			   			 
-</ion-list>
-<button class="button button-positive">Take Tour</button>
-</ion-content>
 
-</ion-view>
-
-=======
 
    </ion-item>
 </ion-list>
@@ -53,4 +33,3 @@
 </ion-content>
 
 </ion-view>
->>>>>>> 3c96d1a6e2d702d5eb031c07172bd9a789fdfb6b

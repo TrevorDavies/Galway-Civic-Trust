@@ -53,8 +53,7 @@ $stateProvider
     }
   }
 })
-<<<<<<< HEAD
-=======
+
 
 .state('mytour', {
   url: '/mytour',
@@ -65,7 +64,7 @@ $stateProvider
     }
   }
 })
->>>>>>> 3c96d1a6e2d702d5eb031c07172bd9a789fdfb6b
+
 .state('locations', {
   url: '/tours/:aId',
   views: {
