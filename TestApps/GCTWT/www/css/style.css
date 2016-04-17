@@ -45,6 +45,10 @@
 #logo img {
 
   width: 400px;
+<<<<<<< HEAD
+=======
+  margin-left: -20px;
+>>>>>>> 3c96d1a6e2d702d5eb031c07172bd9a789fdfb6b
 
 }
 .headers h1,h2,h3,h4{
@@ -124,11 +128,14 @@
 	  }
 }
 
+<<<<<<< HEAD
 #logo img {
 
   width: 400px;
 
 }
+=======
+>>>>>>> 3c96d1a6e2d702d5eb031c07172bd9a789fdfb6b
 .headers h1,h2,h3,h4{
     color:#fff;
 }
@@ -255,4 +262,13 @@ height: 100%;
 }
 
 
+<<<<<<< HEAD
+=======
+/* Offline Saved Tour Tab*/
+#tourStaticMap {
+  width: 100%;
+  height: auto;
+}
+
+>>>>>>> 3c96d1a6e2d702d5eb031c07172bd9a789fdfb6b
 /* Settings Tab*/

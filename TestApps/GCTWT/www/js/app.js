@@ -53,6 +53,19 @@ $stateProvider
     }
   }
 })
+<<<<<<< HEAD
+=======
+
+.state('mytour', {
+  url: '/mytour',
+  views: {
+    'tab-mytour': {
+      templateUrl: 'templates/tab-mytour.html',
+      controller: 'SavedTourCtrl'
+    }
+  }
+})
+>>>>>>> 3c96d1a6e2d702d5eb031c07172bd9a789fdfb6b
 .state('locations', {
   url: '/tours/:aId',
   views: {
