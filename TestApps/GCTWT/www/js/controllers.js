@@ -361,13 +361,22 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
 //===========================================
 
 .controller('ToursCtrl', ['$scope', '$http', '$state', function($scope, $http, $state) {
-
     $http.get('http://galwaytour.tk/api/tour/getAllPublishedTours').success(function(data) {
       $scope.places = data;
 
       $scope.whichplace=$state.params.aId;
 
     });
+
+    $scope.doRefresh = function() {
+      $http.get('http://galwaytour.tk/api/tour/getAllPublishedTours').success(function(data) {
+        $scope.places = data;
+        console.log('Refreshing ..');
+        $scope.whichplace=$state.params.aId;
+        $scope.$broadcast('scroll.refreshComplete');
+        console.log('Refresh done.');
+      });
+    }
 }])
 
 .controller('TakeTourCtrl', ['$scope', '$http', '$state','$cordovaGeolocation', 'DataService', function($scope, $http, $state,$cordovaGeolocation, DataService) {
