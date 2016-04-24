@@ -161,7 +161,33 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
   });
 })//end MapCtrl
 
-.controller('LocationsCtrl',['$scope', '$http', '$state', '$localStorage', '$cordovaFile','$cordovaFileTransfer', function($scope, $http, $state, $localStorage, $cordovaFile, $cordovaFileTransfer) {
+.service('DataService', function () {
+    var tourData = [];
+    var tourLocationNum;
+
+    return {
+        setData: function (data) {
+            tourData = data;
+        },
+        getData: function () {
+            return tourData;
+        },
+        resetLocation: function(num) {
+          tourLocationNum = 0
+        },
+        nextLocation: function() {
+          tourLocationNum += 1;
+        },
+        prevLocation: function() {
+          tourLocationNum -= 1;
+        },
+        getLocation: function() {
+          return tourLocationNum;
+        }
+     }
+})
+
+.controller('LocationsCtrl',['$scope', '$http', '$state', '$localStorage', '$cordovaFile','$cordovaFileTransfer', 'DataService', function($scope, $http, $state, $localStorage, $cordovaFile, $cordovaFileTransfer, DataService) {
  $scope.tourId=$state.params.aId;
  console.log($scope.tourId);
 
@@ -172,6 +198,7 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
     $http.get($scope.url).then(function(resp){
 
     $scope.locationData = resp.data;
+    DataService.setData($scope.locationData);
   //  console.log($scope.tourId);
   //  console.log($scope.locationData);
   //  console.log($scope.url);
@@ -225,7 +252,7 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
 
     $scope.MapDownload = function (url) {
 
-      var filename = 'staticMap.jpg';
+      var filename = 'staticMap' + '?' + new Date().getTime() + '.jpg';
       var targetPath = cordova.file.externalRootDirectory + 'tourResources/' + filename;
 
       $cordovaFileTransfer.download(url, targetPath, {}, true).then(function (result) {
@@ -254,8 +281,10 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
     }
 }])
 
-.controller('SavedTourCtrl',['$scope', '$localStorage', '$state', function($scope, $localStorage, $state) {
+.controller('SavedTourCtrl',['$scope', '$localStorage', '$state', '$ionicHistory', function($scope, $localStorage, $state, $ionicHistory) {
   $scope.$on('$ionicView.enter', function() {
+    $ionicHistory.clearCache();
+    $ionicHistory.clearHistory();
      // Code you want executed every time view is opened
      if($localStorage.mySavedTour != "") {
          $scope.savedTourData = $localStorage.mySavedTour;
@@ -308,6 +337,7 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
 
 }])//end LocationsCtrl
 
+
 //===========================================
 .controller('DetailsCtrl',['$scope', '$http', '$state', function($scope, $http, $state) {
  $scope.tourId=$state.params.aId;
@@ -336,4 +366,136 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
       $scope.whichplace=$state.params.aId;
 
     });
+}])
+
+.controller('TakeTourCtrl', ['$scope', '$http', '$state','$cordovaGeolocation', 'DataService', function($scope, $http, $state,$cordovaGeolocation, DataService) {
+
+   $scope.locationDataToTake = DataService.getData();
+   DataService.resetLocation();
+   $scope.currLocation = DataService.getLocation();
+   $scope.currLocationData = $scope.locationDataToTake[$scope.currLocation];
+   DataService.nextLocation();
+   $scope.nextLocation = DataService.getLocation();
+   $scope.nextLocationData = $scope.locationDataToTake[$scope.nextLocation];
+   var options = {timeout: 30000, enableHighAccuracy: true};
+
+   $cordovaGeolocation.getCurrentPosition(options).then(function(position){
+      var latLng = new google.maps.LatLng($scope.locationDataToTake[$scope.currLocation].xCoordinate,$scope.locationDataToTake[$scope.currLocation].yCoordinate);
+
+      var mapOptions = {
+        disableDefaultUI: true,
+        zoomControl: false,
+        scrollwheel: false,
+        disableDoubleClickZoom: true,
+        draggable: false,
+        center: latLng,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      };
+
+      var tourCoordinates = [];
+      var marker;
+
+      for(var i = $scope.currLocation; i <= $scope.nextLocation; i++) {
+        marker = new google.maps.Marker({
+        position: new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate),
+        map: $scope.tourMap
+        });
+        tourCoordinates.push(new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate));
+      }
+
+      console.log(tourCoordinates);
+
+      $scope.tourMap = new google.maps.Map(document.getElementById("map"), mapOptions);
+      console.log('map initialized');
+
+      google.maps.event.addListenerOnce($scope.tourMap, 'idle', function(){
+        console.log('before path')
+        console.log(tourCoordinates);
+        var tourPath = new google.maps.Polyline({
+           path: tourCoordinates,
+           geodesic: true,
+           strokeColor: '#FF0000',
+           strokeOpacity: 1.0,
+           strokeWeight: 2
+          });
+
+          for(var i = $scope.currLocation; i <= $scope.nextLocation; i++) {
+            marker = new google.maps.Marker({
+            position: new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate),
+            })
+            marker.setMap($scope.tourMap);
+          }
+
+         console.log('after path')
+         tourPath.setMap($scope.tourMap);
+         //marker.setMap($scope.tourMap);
+         console.log('after tour')
+      })
+    });
+
+    $scope.NextLocation = function () {
+      var tourCoordinates = [];
+      $scope.hideNextButton = true;
+      $scope.currLocation = $scope.nextLocation;
+      $scope.currLocationData = $scope.locationDataToTake[$scope.currLocation];
+      DataService.nextLocation();
+      $scope.nextLocation = DataService.getLocation();
+      $scope.nextLocationData = $scope.locationDataToTake[$scope.nextLocation];
+
+      $cordovaGeolocation.getCurrentPosition(options).then(function(position){
+         var latLng = new google.maps.LatLng($scope.locationDataToTake[$scope.currLocation].xCoordinate,$scope.locationDataToTake[$scope.currLocation].yCoordinate);
+
+         var mapOptions = {
+           disableDefaultUI: true,
+           zoomControl: false,
+           scrollwheel: false,
+           disableDoubleClickZoom: true,
+           draggable: false,
+           center: latLng,
+           zoom: 15,
+           mapTypeId: google.maps.MapTypeId.ROADMAP
+         };
+
+         var tourCoordinates = [];
+         var marker;
+
+         for(var i = $scope.currLocation; i <= $scope.nextLocation; i++) {
+           tourCoordinates.push(new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate));
+         }
+
+         console.log(tourCoordinates);
+
+         $scope.tourMap = new google.maps.Map(document.getElementById("map"), mapOptions);
+         console.log('map initialized');
+
+         google.maps.event.addListenerOnce($scope.tourMap, 'idle', function(){
+           console.log('before path')
+           var tourPath = new google.maps.Polyline({
+              path: tourCoordinates,
+              geodesic: true,
+              strokeColor: '#FF0000',
+              strokeOpacity: 1.0,
+              strokeWeight: 2
+            });
+
+            for(var i = $scope.currLocation; i <= $scope.nextLocation; i++) {
+              marker = new google.maps.Marker({
+              position: new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate),
+              })
+              marker.setMap($scope.tourMap);
+            }
+            console.log('after path')
+            tourPath.setMap($scope.tourMap);
+            console.log('after tour')
+         })
+       });
+
+      }, function (error) {
+          console.log('Error');
+      }, function (progress) {
+          // PROGRESS HANDLING GOES HERE
+      };
+
+
 }]);

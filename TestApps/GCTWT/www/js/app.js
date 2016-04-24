@@ -63,6 +63,17 @@ $stateProvider
     }
   }
 })
+
+.state('takeTour', {
+  url: '/takeTour/:aId',
+  views: {
+    'tab-tours': {
+      templateUrl: 'templates/takeTour.html',
+      controller: 'TakeTourCtrl'
+    }
+  }
+})
+
 .state('locations', {
   url: '/tours/:aId',
   views: {

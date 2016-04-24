@@ -1,0 +1,33 @@
+<ion-view view-title="Tours">
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button>
+      </ion-nav-back-button>
+    </ion-nav-bar>
+  </ion-nav-bar>
+  <ion-content class="has-header">
+  <ion-list>
+	
+   <ion-item ng-class="{'star': location.star}" ng-repeat="location in locationData" class="item-thumbnail-left item-icon-right
+      item-text-wrap" href="#/details/{{location._id}}">
+      <img ng-src="http://galwaytour.tk/{{location.image}}" alt="Photo">
+      <h3>{{location.title}}</h3>
+      <p>{{ location.description.substr(0,100) }} </p>
+	  <p style="color:blue" align="right"> Read more... </p>
+	 <i class="icon ion-arrow-right-b"></i>
+	 
+	 <button class="button button-clear icon ion-star button button-assertive"
+        ng-click="toggleStar(location)"
+        ng-show="location.star"></button>
+		
+      <ion-option-button class="button-dark"
+        ng-click="toggleStar(location)">
+        <i class="icon ion-star"></i>
+      </ion-option-button>
+	  
+   </ion-item>			   			 
+</ion-list>
+<button class="button button-positive">Take Tour</button>
+</ion-content>
+
+</ion-view>
+
