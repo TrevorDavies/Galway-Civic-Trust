@@ -54,6 +54,7 @@ $stateProvider
   }
 })
 
+
 .state('mytour', {
   url: '/mytour',
   views: {

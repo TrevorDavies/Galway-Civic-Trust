@@ -1,4 +1,6 @@
+
 angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
+
 
 .constant('WEATHERAPI_KEY','f40acdcb5aabf0faf07699d42ffc88c2' )
 .controller('HomeCtrl', function($scope,$state,$http,WEATHERAPI_KEY) {
@@ -156,10 +158,10 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
 });
 
   }, function(error){
-    console.log(error);
     console.log("Could not get location");
   });
 })//end MapCtrl
+
 
 .service('DataService', function () {
     var tourData = [];
@@ -188,9 +190,10 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
 })
 
 .controller('LocationsCtrl',['$scope', '$http', '$state', '$localStorage', '$cordovaFile','$cordovaFileTransfer', 'DataService', function($scope, $http, $state, $localStorage, $cordovaFile, $cordovaFileTransfer, DataService) {
+
+
  $scope.tourId=$state.params.aId;
  console.log($scope.tourId);
-
 
  $scope.url = 'http://galwaytour.tk/api/tour/pullAllLocations/'+$scope.tourId;
 
@@ -203,7 +206,6 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
   //  console.log($scope.locationData);
   //  console.log($scope.url);
     });//end of http
-
 
     //we already have the data so save it to local storage for offline use when requested
     $scope.downloadTour = function(tourData) {
@@ -279,7 +281,7 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
       });
       return targetPath;
     }
-}])
+}])//end LocationsCtrl
 
 .controller('SavedTourCtrl',['$scope', '$localStorage', '$state', '$ionicHistory', function($scope, $localStorage, $state, $ionicHistory) {
   $scope.$on('$ionicView.enter', function() {
@@ -335,7 +337,7 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
      }
   })
 
-}])//end LocationsCtrl
+}])
 
 
 //===========================================
