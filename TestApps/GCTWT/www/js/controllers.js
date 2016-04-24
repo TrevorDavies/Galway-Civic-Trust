@@ -379,7 +379,13 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
     }
 }])
 
-.controller('TakeTourCtrl', ['$scope', '$http', '$state','$cordovaGeolocation', 'DataService', function($scope, $http, $state,$cordovaGeolocation, DataService) {
+.controller('TakeTourCtrl', ['$scope', '$http', '$state','$cordovaGeolocation', 'DataService', '$ionicHistory', function($scope, $http, $state,$cordovaGeolocation, DataService, $ionicHistory) {
+
+    $scope.goHome = function() {
+      $ionicHistory.clearCache();
+      $ionicHistory.clearHistory();
+      $state.go('home');
+    };
 
    $scope.locationDataToTake = DataService.getData();
    DataService.resetLocation();
@@ -389,6 +395,9 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
    $scope.nextLocation = DataService.getLocation();
    $scope.nextLocationData = $scope.locationDataToTake[$scope.nextLocation];
    var options = {timeout: 30000, enableHighAccuracy: true};
+
+   var distanceUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial';
+
 
    $cordovaGeolocation.getCurrentPosition(options).then(function(position){
       var latLng = new google.maps.LatLng($scope.locationDataToTake[$scope.currLocation].xCoordinate,$scope.locationDataToTake[$scope.currLocation].yCoordinate);
@@ -408,10 +417,10 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
       var marker;
 
       for(var i = $scope.currLocation; i <= $scope.nextLocation; i++) {
-        marker = new google.maps.Marker({
-        position: new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate),
-        map: $scope.tourMap
-        });
+        // marker = new google.maps.Marker({
+        // position: new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate),
+        // map: $scope.tourMap
+        // });
         tourCoordinates.push(new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate));
       }
 
@@ -430,13 +439,36 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
            strokeOpacity: 1.0,
            strokeWeight: 2
           });
-
+          //&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592
           for(var i = $scope.currLocation; i <= $scope.nextLocation; i++) {
-            marker = new google.maps.Marker({
-            position: new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate),
-            })
-            marker.setMap($scope.tourMap);
+            if(i < $scope.nextLocation)
+            {
+              distanceUrl += '&origins=' + $scope.locationDataToTake[i].xCoordinate + ',' + $scope.locationDataToTake[i].yCoordinate;
+              marker = new google.maps.Marker({
+              position: new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate),
+              label: (i+1).toString()
+              })
+              marker.setMap($scope.tourMap);
+            }
+            else {
+              distanceUrl += '&destinations=' + $scope.locationDataToTake[i].xCoordinate + ',' + $scope.locationDataToTake[i].yCoordinate + '&mode=walking&key=AIzaSyCBYil1DfXoRTgEcqB0-wL99XVTKqEkVio';
+              marker = new google.maps.Marker({
+              position: new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate),
+              label: (i+1).toString()
+              })
+              marker.setMap($scope.tourMap);
+            }
           }
+
+          $http.get(distanceUrl).success(function(distanceData) {
+            console.log(distanceUrl);
+            $scope.distanceDataReceived = distanceData;
+            $scope.TimeTravel = distanceData.rows[0].elements[0].distance.text;
+            $scope.TimeTravel2 = distanceData.rows[0].elements[0].duration.text;
+            console.log($scope.distanceDataReceived);
+            console.log($scope.TimeTravel);
+            console.log($scope.TimeTravel2);
+          });
 
          console.log('after path')
          tourPath.setMap($scope.tourMap);
@@ -446,61 +478,105 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
     });
 
     $scope.NextLocation = function () {
+      var distanceUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial';
       var tourCoordinates = [];
-      $scope.hideNextButton = true;
-      $scope.currLocation = $scope.nextLocation;
-      $scope.currLocationData = $scope.locationDataToTake[$scope.currLocation];
-      DataService.nextLocation();
-      $scope.nextLocation = DataService.getLocation();
-      $scope.nextLocationData = $scope.locationDataToTake[$scope.nextLocation];
+      console.log($scope.locationDataToTake.length);
+      console.log($scope.currLocation);
+      if ($scope.locationDataToTake.length == $scope.currLocation +2){
+        $scope.hideNextButton = true;
+        $scope.ifLast = true;
+      }
 
-      $cordovaGeolocation.getCurrentPosition(options).then(function(position){
-         var latLng = new google.maps.LatLng($scope.locationDataToTake[$scope.currLocation].xCoordinate,$scope.locationDataToTake[$scope.currLocation].yCoordinate);
+      if ($scope.hideNextButton == true)
+      {
+        $scope.currLocation = $scope.nextLocation;
+        $scope.currLocationData = $scope.locationDataToTake[$scope.currLocation];
+        $scope.nextLocation = '';
+        $scope.nextLocationData = '';
+      }
+      else if ($scope.currLocation == 8)
+      {
 
-         var mapOptions = {
-           disableDefaultUI: true,
-           zoomControl: false,
-           scrollwheel: false,
-           disableDoubleClickZoom: true,
-           draggable: false,
-           center: latLng,
-           zoom: 15,
-           mapTypeId: google.maps.MapTypeId.ROADMAP
-         };
+      }
+      else {
+        $scope.currLocation = $scope.nextLocation;
+        $scope.currLocationData = $scope.locationDataToTake[$scope.currLocation];
+        DataService.nextLocation();
+        $scope.nextLocation = DataService.getLocation();
+        $scope.nextLocationData = $scope.locationDataToTake[$scope.nextLocation];
 
-         var tourCoordinates = [];
-         var marker;
+        $cordovaGeolocation.getCurrentPosition(options).then(function(position){
+           var latLng = new google.maps.LatLng($scope.locationDataToTake[$scope.currLocation].xCoordinate,$scope.locationDataToTake[$scope.currLocation].yCoordinate);
 
-         for(var i = $scope.currLocation; i <= $scope.nextLocation; i++) {
-           tourCoordinates.push(new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate));
-         }
+           var mapOptions = {
+             disableDefaultUI: true,
+             zoomControl: false,
+             scrollwheel: false,
+             disableDoubleClickZoom: true,
+             draggable: false,
+             center: latLng,
+             zoom: 15,
+             mapTypeId: google.maps.MapTypeId.ROADMAP
+           };
 
-         console.log(tourCoordinates);
+           var tourCoordinates = [];
+           var marker;
 
-         $scope.tourMap = new google.maps.Map(document.getElementById("map"), mapOptions);
-         console.log('map initialized');
+           for(var i = $scope.currLocation; i <= $scope.nextLocation; i++) {
+             tourCoordinates.push(new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate));
+           }
 
-         google.maps.event.addListenerOnce($scope.tourMap, 'idle', function(){
-           console.log('before path')
-           var tourPath = new google.maps.Polyline({
-              path: tourCoordinates,
-              geodesic: true,
-              strokeColor: '#FF0000',
-              strokeOpacity: 1.0,
-              strokeWeight: 2
-            });
+           console.log(tourCoordinates);
 
-            for(var i = $scope.currLocation; i <= $scope.nextLocation; i++) {
-              marker = new google.maps.Marker({
-              position: new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate),
-              })
-              marker.setMap($scope.tourMap);
-            }
-            console.log('after path')
-            tourPath.setMap($scope.tourMap);
-            console.log('after tour')
-         })
-       });
+           $scope.tourMap = new google.maps.Map(document.getElementById("map"), mapOptions);
+           console.log('map initialized');
+
+           google.maps.event.addListenerOnce($scope.tourMap, 'idle', function(){
+             console.log('before path')
+             var tourPath = new google.maps.Polyline({
+                path: tourCoordinates,
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+              });
+
+              for(var i = $scope.currLocation; i <= $scope.nextLocation; i++) {
+                if(i < $scope.nextLocation)
+                {
+                  distanceUrl += '&origins=' + $scope.locationDataToTake[i].xCoordinate + ',' + $scope.locationDataToTake[i].yCoordinate;
+                  marker = new google.maps.Marker({
+                  position: new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate),
+                  label: (i+1).toString()
+                  })
+                  marker.setMap($scope.tourMap);
+                }
+                else {
+                  distanceUrl += '&destinations=' + $scope.locationDataToTake[i].xCoordinate + ',' + $scope.locationDataToTake[i].yCoordinate + '&mode=walking&key=AIzaSyCBYil1DfXoRTgEcqB0-wL99XVTKqEkVio';
+                  marker = new google.maps.Marker({
+                  position: new google.maps.LatLng($scope.locationDataToTake[i].xCoordinate,$scope.locationDataToTake[i].yCoordinate),
+                  label: (i+1).toString()
+                  })
+                  marker.setMap($scope.tourMap);
+                }
+              }
+              $http.get(distanceUrl).success(function(distanceData) {
+                console.log(distanceUrl);
+                $scope.distanceDataReceived = distanceData;
+                $scope.TimeTravel = distanceData.rows[0].elements[0].distance.text;
+                $scope.TimeTravel2 = distanceData.rows[0].elements[0].duration.text;
+                console.log($scope.distanceDataReceived);
+                console.log($scope.TimeTravel);
+                console.log($scope.TimeTravel2);
+              });
+              console.log('after path')
+              tourPath.setMap($scope.tourMap);
+              console.log('after tour')
+           })
+         });
+
+      }
+
 
       }, function (error) {
           console.log('Error');
