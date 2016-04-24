@@ -28,8 +28,12 @@
 
    </ion-item>
 </ion-list>
+<div ng-if="locationData.length>0">
 <a class="button button-positive" href="#/takeTour/{{location._id}}">Take Tour</a>
-<button class="button button-positive" ng-click="downloadTour(locationData)">Download Tour</button>
+<button class="button button-positive" ng-click="downloadTour(locationData)">Download Tour</button> </div>
+<div ng-if="locationData.length==0"> 
+	<h1 style="color:blue;"> No locations has been added yet. Please come back again.</h1>
+</div>
 </ion-content>
 
 </ion-view>
