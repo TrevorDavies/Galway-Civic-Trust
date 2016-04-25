@@ -12,7 +12,7 @@
       <img ng-src="http://galwaytour.tk/{{location.image}}" alt="Photo">
       <h3>{{location.title}}</h3>
       <p>{{ location.description.substr(0,100) }} </p>
-	  <p style="color:blue" align="right"> Read more... </p>
+	    <p style="color:blue" align="right"> Read more... </p>
 	 <i class="icon ion-arrow-right-b"></i>
 
 
@@ -29,9 +29,9 @@
    </ion-item>
 </ion-list>
 <div ng-if="locationData.length>0">
-<a class="button button-positive" href="#/takeTour/{{location._id}}">Take Tour</a>
-<button class="button button-positive" ng-click="downloadTour(locationData)">Download Tour</button> </div>
-<div ng-if="locationData.length==0"> 
+<a class="button button-block button-positive" href="#/takeTour/{{location._id}}">Take Tour</a>
+<button class="button button-block button-royal" ng-click="downloadTour(locationData)">Download Tour</button> </div>
+<div ng-if="locationData.length==0">
 	<h1 style="color:blue;"> No locations has been added yet. Please come back again.</h1>
 </div>
 </ion-content>

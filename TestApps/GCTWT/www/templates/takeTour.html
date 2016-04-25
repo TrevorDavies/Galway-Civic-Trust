@@ -15,7 +15,7 @@
       <h3>Current Location: {{currLocation+1}}.{{currLocationData.title}}</h3>
       <img id="tourStaticMap" ng-src="http://galwaytour.tk/{{currLocationData.image}}" alt="Photo">
       <p>{{currLocationData.description}}</p>
-      <p></p>
+      <br>
       <h3 ng-hide="ifLast">Next Location: {{nextLocation+1}}.{{nextLocationData.title}}</h3>
       <p ng-hide="ifLast">Distance To Next Location: <strong>{{TimeTravel}}</strong></p>
       <p ng-hide="ifLast">Travel Time to Next Location: <strong>{{TimeTravel2}}</strong></p>

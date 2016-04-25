@@ -134,6 +134,8 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
 
 
 .controller('MapCtrl', function($scope,$state,$cordovaGeolocation) {
+
+
   var options = {timeout: 10000, enableHighAccuracy: true};
 
   $cordovaGeolocation.getCurrentPosition(options).then(function(position){
@@ -380,6 +382,9 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
 }])
 
 .controller('TakeTourCtrl', ['$scope', '$http', '$state','$cordovaGeolocation', 'DataService', '$ionicHistory', function($scope, $http, $state,$cordovaGeolocation, DataService, $ionicHistory) {
+$scope.$on('$ionicView.enter', function() {
+  $ionicHistory.clearCache();
+  $ionicHistory.clearHistory();
 
     $scope.goHome = function() {
       $ionicHistory.clearCache();
@@ -396,7 +401,7 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
    $scope.nextLocationData = $scope.locationDataToTake[$scope.nextLocation];
    var options = {timeout: 30000, enableHighAccuracy: true};
 
-   var distanceUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial';
+   var distanceUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric';
 
 
    $cordovaGeolocation.getCurrentPosition(options).then(function(position){
@@ -478,7 +483,7 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
     });
 
     $scope.NextLocation = function () {
-      var distanceUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial';
+      var distanceUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric';
       var tourCoordinates = [];
       console.log($scope.locationDataToTake.length);
       console.log($scope.currLocation);
@@ -583,6 +588,6 @@ angular.module('GCTWT.controllers', ['ionic','ngCordova','ngStorage'])
       }, function (progress) {
           // PROGRESS HANDLING GOES HERE
       };
-
+})
 
 }]);
